@@ -1,0 +1,20 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+Categories
+{% endblock %}
+
+{% block body %}
+    <div class="mx-auto" style="margin-bottom: 15px;">
+        <h2 class="ps-5">Categories</h2>
+    </div>
+    <div class="ps-5"> 
+        <ul>
+            {% for category in categories %}
+            <li><a class="auctionlink" href="{% url 'category' category%}"><h5>{{category}}</h5></a></li>
+            {% empty %}
+            <li>No Categories Listed.</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+{{auction.name}}
+{% endblock %}
+
+{% block body %}
+    <div class="ps-4">
+        <div class="row">
+            <div class="col-6">
+                <img class="detailimg mt-3" src={{auction.image}} alt="Product Image">
+            </div>
+            <div class="col-6 mt-3">
+                <div class="row">
+                    <h3>Listing: <span class="notbold">{{auction.name}}</span></h3>
+                </div>
+                <div class="row">
+                    <h4>Description: <span class="notbold">{{auction.description}}</span></h4>
+                </div>
+                {% if user == auction.winner %}
+                <div>
+                    <h5>Winner: <span class="notbold">You have won this auction.</span></h5>
+                </div>
+                {% else %}
+                <div>
+                    <h5>Winner: <span class="notbold">{{auction.winner.first_name}} {{auction.winner.last_name}}</span></h5>
+                </div>
+                {% endif %}
+                {% if emptybid %}
+                <div class="row">
+                    <h5>Winner Bid: <span class="notbold">{{higherbid}}</span></h5>
+                </div>
+                {% else %}
+                <div class="row">
+                    <h5>Winner Bid: <span class="notbold">${{higherbid}}</span></h5>
+                </div>
+                {% endif %}
+                <div class="row mb-2">
+                    <p class="card-text"><small class="text-muted">Highest of {{numberofbids}} bid(s)</small></p>
+                </div>
+                {% if closed %}
+                <div class="col-8 alert alert-success" role="alert">
+                    <strong>Success:</strong> Bid correctly closed.
+                </div>
+                {% endif %}
+                <div class="row">
+                    <ul class="ps-5">
+                        <li>
+                            {% if auction.category %}
+                                <h6>Category: <span class="notbold">{{auction.category}}</span></h5>
+                            {% else %}
+                                <h6>Category: <span class="notbold">No Category Listed</span></h5>
+                            {% endif %}
+                        </li>
+                        <li>
+                            <h6>Listed by: <span class="notbold">{{auction.user.first_name}} {{auction.user.last_name}}</span></h5>
+                        </li>
+                        <li>
+                            <h6>Created: <span class="notbold">{{auction.creationDate}}</span></h6>
+                        </li>
+                        <li>
+                            <h6>Closed: <span class="notbold">{{auction.closingDate}}</span></h6>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <h5>Comments</h5>
+                </div>
+                {% for comment in comments %}
+                <div class="row ps-4 mb-3">
+                    <div class="comment-header row">
+                        <div class="col">
+                            <strong>{{comment.user.first_name}} {{comment.user.last_name}}</strong>
+                        </div>
+                        <div class="col">
+                            <p class="text-end text-muted">{{comment.publishDate}}</p>
+                        </div>
+                    </div>
+                    <div class="comment-body row ps-3">
+                        {{comment.comment}}
+                    </div>
+                </div>
+                {% empty %}
+                <div class="row ps-4 mb-3">
+                    <h6>There are no comments on this auction.</h6>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div class="mx-auto" style="margin-bottom: 15px;">
+        <h2 class="text-center">Active Listings</h2>
+    </div>
+
+    {% for auction in auctions %}
+        <div class="auctionblock mb-4">
+            <a class="auctionlink" href="{% url 'auction' auction.id %}">
+                <div class="row">
+                    <div class="col-4 text-break">
+                        <img class="listimage" src={{auction.image}} alt="Product Image">
+                    </div>
+                    <div class="col-8 text-break p-3">
+                        <div class="row card-title">
+                            <h5 class="card-title">{{auction.name}}</h5>
+                        </div> 
+                        <div class="row">
+                            <h6 class="card-text"><strong>Price: </strong>${{auction.price}}</h6>
+                        </div> 
+                        <div class="row">
+                            <p class="card-text"><strong>Description: </strong>{{auction.description}}</p>
+                        </div>
+                        {% if auction.category %}
+                        <div class="row">
+                            <p class="card-text"><strong>Category: </strong>{{auction.category}}</p>
+                        </div>
+                        {% endif %}
+                        <div class="row">
+                            <p class="card-text"><small class="text-muted">{{auction.creationDate}}</small></p>
+                        </div>
+                        <div>
+                            <!-- This is an example seen in https://www.w3schools.com/howto/howto_css_star_rating.asp -->
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    {% empty %}
+        <li class="ps-5"><strong>No Acitve Auctions.</strong></li>
+    {% endfor %}
+{% endblock %}

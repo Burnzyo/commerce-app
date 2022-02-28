@@ -1,0 +1,128 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+{{auction.name}}
+{% endblock %}
+
+{% block body %}
+    <div class="ps-4">
+        <div class="row">
+            <div class="col-6">
+                <img class="detailimg mt-3" src={{auction.image}} alt="Product Image">
+            </div>
+            <div class="col-6 mt-3">
+                <div class="row">
+                    <h3>Listing: <span class="notbold">{{auction.name}}</span></h3>
+                </div>
+                <div class="row">
+                    <h4>Description: <span class="notbold">{{auction.description}}</span></h4>
+                </div>
+                <div class="row">
+                    <h5>Initial Price: <span class="notbold">${{auction.price}}</span></h5>
+                </div>
+                <div class="row">
+                    <h5>Current Bid: <span class="notbold">${{price}}</span></h5>
+                </div>
+                <div class="row mb-2">
+                    <p class="card-text"><small class="text-muted">Highest of {{numberofbids}} bid(s)</small></p>
+                </div>
+                {% if owner %}
+                <div class="row">
+                    <div class="col-2">
+                        <form action="{% url 'closeAuction' auction.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-dark">Close Auction</button>
+                        </form>
+                    </div>
+                </div>
+                {% else %}
+                {% if message %}
+                <div class="col-8 alert alert-danger" role="alert">
+                    <strong>Error:</strong> {{message}}
+                </div>
+                {% elif bidplaced %}
+                <div class="col-8 alert alert-success" role="alert">
+                    <strong>Success:</strong> {{bidplaced}}
+                </div>
+                {% elif watchlist%}
+                <div class="col-8 alert alert-success" role="alert">
+                    <strong>Success:</strong> {{watchlist}}
+                </div>
+                {% endif %}
+                <div class="row mb-2">
+                    <form action="{% url 'auction' auction.id %}" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="mb-2 col-3">
+                                <input type="number" name="newbid" class="form-control" placeholder="Place Your Bid">
+                            </div>
+                            <div class="col-2">
+                                <button type="submit" class="btn btn-dark">Place Bid</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <form action="{% url 'auction' auction.id %}" method="post">
+                            {% csrf_token %}
+                            {% if not alreadyWatching %}
+                            <button type="submit" name="addtowatchlist" class="btn btn-primary">Add To Watchlist</button>
+                            {% else %}
+                            <button type="submit" name="removefromwatchlist" class="btn btn-danger">Remove From Watchlist</button>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="row mt-3">
+                    <h5>Details</h5>
+                </div>
+                <div class="row">
+                    <ul class="ps-5">
+                        <li>
+                            {% if auction.category %}
+                                <h6>Category: <span class="notbold">{{auction.category}}</span></h5>
+                            {% else %}
+                                <h6>Category: <span class="notbold">No Category Listed</span></h5>
+                            {% endif %}
+                        </li>
+                        <li>
+                            <h6>Listed by: <span class="notbold">{{auction.user.first_name}} {{auction.user.last_name}}</span></h5>
+                        </li>
+                        <li>
+                            <h6>Created: <span class="notbold">{{auction.creationDate}}</span></h6>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <h5>Comments</h5>
+                </div>
+                <div class="row input-group mb-3">
+                    <form action="{% url 'auction' auction.id %}" method="post">
+                        {% csrf_token %}
+                        {{form}}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-dark ">Place Comment</button>
+                        </div>
+                    </form>
+                </div>
+                {% for comment in comments %}
+                <div class="row ps-4 mb-3">
+                    <div class="comment-header row">
+                        <div class="col">
+                            <strong>{{comment.user.first_name}} {{comment.user.last_name}}</strong>
+                        </div>
+                        <div class="col">
+                            <p class="text-end text-muted">{{comment.publishDate}}</p>
+                        </div>
+                    </div>
+                    <div class="comment-body row ps-3">
+                        {{comment.comment}}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
